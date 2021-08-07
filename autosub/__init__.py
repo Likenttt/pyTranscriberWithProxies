@@ -88,11 +88,12 @@ class SpeechRecognizer(object): # pylint: disable=too-few-public-methods
     """
     Class for performing speech-to-text for an input FLAC file.
     """
-    def __init__(self, language="en", rate=44100, retries=3, api_key=GOOGLE_SPEECH_API_KEY):
+    def __init__(self, language="en", rate=44100, retries=3, api_key=GOOGLE_SPEECH_API_KEY,proxies={}):
         self.language = language
         self.rate = rate
         self.api_key = api_key
         self.retries = retries
+        self.proxies = proxies
 
     def __call__(self, data):
         try:
@@ -106,7 +107,10 @@ class SpeechRecognizer(object): # pylint: disable=too-few-public-methods
                 }
 
                 try:
-                    resp = requests.post(url, data=data, headers=headers,proxies=proxies)
+                    if len(self.proxies) > 0:
+                        resp = requests.post(url, data=data, headers=headers,proxies=self.proxies)
+                    else:
+                        resp = requests.post(url, data=data, headers=headers)
                 except requests.exceptions.ConnectionError:
                     continue
 

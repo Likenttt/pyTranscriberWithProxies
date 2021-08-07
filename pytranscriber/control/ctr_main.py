@@ -22,6 +22,7 @@ from pytranscriber.control.thread_exec_autosub import Thread_Exec_Autosub
 from pytranscriber.control.thread_cancel_autosub import Thread_Cancel_Autosub
 from pytranscriber.gui.gui import Ui_window
 import os
+from pytranscriber.control.proxySettings import ProxySettingsWindow
 
 
 class Ctr_Main():
@@ -186,9 +187,9 @@ class Ctr_Main():
                             "yi - Yiddish",
                             "yo - Yoruba",
                             "yue-Hant-HK - Cantonese (Traditional, HK)",
-                            "zh - Chinese (Simplified, China)",
-                            "zh-HK - Chinese (Simplified, Hong Kong)",
-                            "zh-TW - Chinese (Traditional, Taiwan)",
+                            "zh - 简体中文(中国大陆)",
+                            "zh-HK - 繁体中文(中国香港)",
+                            "zh-TW - 繁体中文(中国台湾)",
                             "zu - Zulu" ]
 
         self.objGUI.cbSelectLang.addItems(list_languages)
@@ -214,6 +215,8 @@ class Ctr_Main():
         self.objGUI.actionLicense.triggered.connect(self.__listenerBLicense)
         self.objGUI.actionDonation.triggered.connect(self.__listenerBDonation)
         self.objGUI.actionAbout_pyTranscriber.triggered.connect(self.__listenerBAboutpyTranscriber)
+        self.objGUI.actionProxy.triggered.connect(self.__listenerBSetProxy)
+
 
     def __resetGUIAfterSuccess(self):
         self.__resetGUIAfterCancel()
@@ -221,6 +224,8 @@ class Ctr_Main():
         self.objGUI.qlwListFilesSelected.clear()
         self.objGUI.bConvert.setEnabled(False)
         self.objGUI.bRemoveFile.setEnabled(False)
+        self.objGUI.bSetProxy.setEnabled(True)
+
 
     def __resetGUIAfterCancel(self):
 
@@ -394,7 +399,18 @@ class Ctr_Main():
                 + "<br><br>If you feel that this software has been useful and would like to contribute for it to continue improve and have more features and fixes you can <a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=YHB854YHPJCU8&item_name=Donation+pyTranscriber&currency_code=BRL\">DONATE VIA PAYPAL</a> or <a href=\"https://blockchain.com/btc/payment_request?address=153LcqV59paxEEJX7riLrEHQbE54vhcko9&amount=0.00026351&message=Donation to support pyTranscriber development\"> DONATE US$5 VIA BITCOIN</a>."
                 + "<br><br>Thanks in advance!"
                 + "</body></html>", "About pyTranscriber")
+    def __listenerBSetProxy(self):
+        dialog = QtWidgets.QDialog()
+        self.proxySettingsSubWindow = ProxySettingsWindow()
+        self.proxySettingsSubWindow.setupUi(dialog)
+        
 
+        self.proxySettingsSubWindow.saveButton.clicked.connect(self.__listenerBSaveProxy)
+
+        dialog.show()
+        dialog.exec_()
+    def __listenerBSaveProxy(self):
+        this 
 
     def __showInfoMessage(self, info_msg, title):
         msg = QMessageBox()

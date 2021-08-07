@@ -94,9 +94,12 @@ class Ui_window(object):
         self.actionDonation.setObjectName("actionDonation")
         self.actionAbout_pyTranscriber = QtWidgets.QAction(window)
         self.actionAbout_pyTranscriber.setObjectName("actionAbout_pyTranscriber")
+        self.actionProxy = QtWidgets.QAction(window)
+        self.actionProxy.setObjectName("actionProxy")
         self.menuAbout.addAction(self.actionLicense)
         self.menuAbout.addAction(self.actionDonation)
         self.menuAbout.addAction(self.actionAbout_pyTranscriber)
+        self.menuAbout.addAction(self.actionProxy)
         self.menubar.addAction(self.menuAbout.menuAction())
 
         self.retranslateUi(window)
@@ -118,3 +121,4 @@ class Ui_window(object):
         self.actionLicense.setText(_translate("window", "&License"))
         self.actionDonation.setText(_translate("window", "&DONATIONS"))
         self.actionAbout_pyTranscriber.setText(_translate("window", "&About pyTranscriber"))
+        self.actionProxy.setText(_translate("window", "&Proxy"))
