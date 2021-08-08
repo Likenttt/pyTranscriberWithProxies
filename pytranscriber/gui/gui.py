@@ -99,8 +99,13 @@ class Ui_window(object):
         self.menuAbout.addAction(self.actionLicense)
         self.menuAbout.addAction(self.actionDonation)
         self.menuAbout.addAction(self.actionAbout_pyTranscriber)
-        self.menuAbout.addAction(self.actionProxy)
         self.menubar.addAction(self.menuAbout.menuAction())
+
+        self.menuProxy = QtWidgets.QMenu(self.menubar)
+        self.menuProxy.setObjectName("menuProxy")
+        self.menuProxy.addAction(self.actionProxy)
+        self.menubar.addAction(self.menuProxy.menuAction())
+
 
         self.retranslateUi(window)
         QtCore.QMetaObject.connectSlotsByName(window)
@@ -121,4 +126,5 @@ class Ui_window(object):
         self.actionLicense.setText(_translate("window", "&License"))
         self.actionDonation.setText(_translate("window", "&DONATIONS"))
         self.actionAbout_pyTranscriber.setText(_translate("window", "&About pyTranscriber"))
-        self.actionProxy.setText(_translate("window", "&Proxy"))
+        self.actionProxy.setText(_translate("window", "Proxy Settings"))
+        self.menuProxy.setTitle(_translate("window", "Proxy"))

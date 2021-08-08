@@ -16,6 +16,9 @@ import subprocess
 import sys
 import tempfile
 import wave
+import traceback
+from pytranscriber.util.util import MyUtil
+
 
 import requests
 from googleapiclient.discovery import build
@@ -77,25 +80,24 @@ class SpeechRecognizer(object): # pylint: disable=too-few-public-methods
     """
     Class for performing speech-to-text for an input FLAC file.
     """
-    def __init__(self, language="en", rate=44100, retries=3, api_key=GOOGLE_SPEECH_API_KEY):
+    def __init__(self, language="en", rate=44100, retries=3, api_key=GOOGLE_SPEECH_API_KEY,proxies={}):
         self.language = language
         self.rate = rate
         self.api_key = api_key
         self.retries = retries
+        self.proxies = proxies
 
     def __call__(self, data):
         try:
             for _ in range(self.retries):
                 url = GOOGLE_SPEECH_API_URL.format(lang=self.language, key=self.api_key)
                 headers = {"Content-Type": "audio/x-flac; rate=%d" % self.rate}
-
-                proxies = {
-                    "http":"socks5://127.0.0.1:10808",
-                    "https":"socks5://127.0.0.1:10808"
-
-                }
                 try:
-                    resp = requests.post(url, data=data, headers=headers,proxies=proxies)
+                    if len(self.proxies) == 0:
+                        resp = requests.post(url, data=data, headers=headers)
+                    else:
+                        resp = requests.post(url, data=data, headers=headers,proxies=self.proxies)
+
                 except requests.exceptions.ConnectionError:
                     continue
 
@@ -244,8 +246,9 @@ def generate_subtitles( # pylint: disable=too-many-locals,too-many-arguments
 
     pool = multiprocessing.Pool(concurrency)
     converter = FLACConverter(source_path=audio_filename)
+    proxies = MyUtil.loadProxies()
     recognizer = SpeechRecognizer(language=src_language, rate=audio_rate,
-                                  api_key=GOOGLE_SPEECH_API_KEY)
+                                  api_key=GOOGLE_SPEECH_API_KEY,proxies=proxies)
 
     transcripts = []
     if regions:

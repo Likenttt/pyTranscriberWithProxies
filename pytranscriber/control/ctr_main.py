@@ -22,7 +22,7 @@ from pytranscriber.control.thread_exec_autosub import Thread_Exec_Autosub
 from pytranscriber.control.thread_cancel_autosub import Thread_Cancel_Autosub
 from pytranscriber.gui.gui import Ui_window
 import os
-from pytranscriber.control.proxySettings import ProxySettingsWindow
+from pytranscriber.gui.proxySettings import ProxySettingsWindow
 
 
 class Ctr_Main():
@@ -187,9 +187,9 @@ class Ctr_Main():
                             "yi - Yiddish",
                             "yo - Yoruba",
                             "yue-Hant-HK - Cantonese (Traditional, HK)",
-                            "zh - 简体中文(中国大陆)",
-                            "zh-HK - 繁体中文(中国香港)",
-                            "zh-TW - 繁体中文(中国台湾)",
+                            "zh - Chinese (Simplified, China)",
+                            "zh-HK - Chinese (Simplified, Hong Kong)",
+                            "zh-TW - Chinese (Traditional, Taiwan)",
                             "zu - Zulu" ]
 
         self.objGUI.cbSelectLang.addItems(list_languages)
@@ -224,7 +224,6 @@ class Ctr_Main():
         self.objGUI.qlwListFilesSelected.clear()
         self.objGUI.bConvert.setEnabled(False)
         self.objGUI.bRemoveFile.setEnabled(False)
-        self.objGUI.bSetProxy.setEnabled(True)
 
 
     def __resetGUIAfterCancel(self):
@@ -406,11 +405,24 @@ class Ctr_Main():
         
 
         self.proxySettingsSubWindow.saveButton.clicked.connect(self.__listenerBSaveProxy)
+        self.proxySettingsSubWindow.resetButton.clicked.connect(self.__listenerBResetProxy)
 
         dialog.show()
         dialog.exec_()
     def __listenerBSaveProxy(self):
-        this 
+        httpPort = self.proxySettingsSubWindow.httpPortEditor.text()
+        httpsPort = self.proxySettingsSubWindow.httpsPortEditor.text()
+        if httpPort == None or httpsPort == None or len(httpsPort) == 0 or len(httpPort) == 0:
+            self.proxySettingsSubWindow.saveButtonPrompt.setText("Failed! invalid port(s)!")
+        else:
+            res = MyUtil.persistenceProxySettings(httpPort,httpsPort)
+            self.proxySettingsSubWindow.saveButtonPrompt.setText(res)
+    def __listenerBResetProxy(self):
+        self.proxySettingsSubWindow.httpPortEditor.setText("")
+        self.proxySettingsSubWindow.httpsPortEditor.setText("")
+        self.proxySettingsSubWindow.resetButton.setEnabled(False)
+        MyUtil.cleanProxySettings()
+
 
     def __showInfoMessage(self, info_msg, title):
         msg = QMessageBox()

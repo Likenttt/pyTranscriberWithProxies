@@ -6,6 +6,7 @@ from autosub import DEFAULT_CONCURRENCY
 from autosub import DEFAULT_SUBTITLE_FORMAT
 from autosub import GOOGLE_SPEECH_API_KEY
 from autosub.formatters import FORMATTERS
+from pytranscriber.util.util import MyUtil
 
 import multiprocessing
 import time
@@ -78,8 +79,9 @@ class Ctr_Autosub():
         regions = find_speech_regions(audio_filename)
 
         converter = FLACConverter(source_path=audio_filename)
+        proxies = MyUtil.loadProxies()
         recognizer = SpeechRecognizer(language=src_language, rate=audio_rate,
-                                      api_key=GOOGLE_SPEECH_API_KEY)
+                                      api_key=GOOGLE_SPEECH_API_KEY,proxies=proxies)
         transcripts = []
         if regions:
             try:

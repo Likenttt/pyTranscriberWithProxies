@@ -16,6 +16,7 @@ import subprocess
 import sys
 import tempfile
 import wave
+from pytranscriber.util.util import MyUtil
 
 import json
 import requests
@@ -100,11 +101,6 @@ class SpeechRecognizer(object): # pylint: disable=too-few-public-methods
             for _ in range(self.retries):
                 url = GOOGLE_SPEECH_API_URL.format(lang=self.language, key=self.api_key)
                 headers = {"Content-Type": "audio/x-flac; rate=%d" % self.rate}
-
-                proxies = {
-                    "http":"socks5://127.0.0.1:10808",
-                    "https":"socks5://127.0.0.1:10808"
-                }
 
                 try:
                     if len(self.proxies) > 0:
@@ -277,8 +273,9 @@ def generate_subtitles( # pylint: disable=too-many-locals,too-many-arguments
 
     pool = multiprocessing.Pool(concurrency)
     converter = FLACConverter(source_path=audio_filename)
+    proxies = MyUtil.loadProxies()
     recognizer = SpeechRecognizer(language=src_language, rate=audio_rate,
-                                  api_key=GOOGLE_SPEECH_API_KEY)
+                                  api_key=GOOGLE_SPEECH_API_KEY,proxies=proxies)
 
     transcripts = []
     if regions:
