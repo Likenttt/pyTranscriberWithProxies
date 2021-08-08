@@ -84,8 +84,8 @@ class ProxySettingsWindow(object):
         dialog.setWindowTitle(_translate("proxyDialog", "Proxy Settings"))
         dialog.setWindowFlags(Qt.WindowCloseButtonHint)
         self.httpProxyLabel.setText(_translate("proxyDialog",
-                                               "http proxy. current only supports local socks5 proxy, so just input the port(0~65535)"))
+                                               "Http proxy. Currently only local socks5 proxy is supported, so just input the port(0~65535)"))
         self.httpsProxyLabel.setText(_translate("proxyDialog",
-                                                "https proxy. current only supports local socks5 proxy, so just input the port(0~65535)"))
+                                                "Https proxy. Currently only local socks5 proxy is supported, so just input the port(0~65535)"))
         self.saveButton.setText(_translate("proxyDialog", "Save"))
         self.resetButton.setText(_translate("proxyDialog", "Reset Proxy"))
