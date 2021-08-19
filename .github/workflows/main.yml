@@ -49,8 +49,16 @@ jobs:
           dir
           cd dist
           dir
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      - name: Create GitHub release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: ${{ env.GitAssemblyInformationalVersion }}
+          title: Version ${{ env.GitAssemblyInformationalVersion }}
+          prerelease: true
+          files: |
+            dist/*
+      - run: |
+          dotnet nuget update source docs-public-packages --username docascode --password ${{ secrets.AZURE_DEVOPS_FEED_TOKEN }}
+          dotnet nuget push --source docs-public-packages --api-key az drop/**/*.nupkg --skip-duplicate
+
